@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Carrossel Manual com Pares</title>
+  <style>
+    /* Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+body {
+  background: radial-gradient(circle, #FFD700, #FFA500);
+  height: 100vh;
+  width: 100vw;
+  margin: 0;
+  padding: 0;
+}
+
+.menu-superior {
+ 
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 20px 30px;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 10;
+}
+
+.menu-superior a {
+  color: white;
+  text-decoration: none;
+  font-size: 18px;
+  padding: 8px 15px;
+
+  border-radius: 4px;
+}
+
+.menu-superior a:hover{
+    color: #FFD700;
+
+}
+
+.menu-superior a:active{
+    color: white;
+
+}
+
+
+    .carousel-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 30px;
+      width: 100%;
+      height: 100%;
+    }
+
+    .carousel-container {
+      position: relative;
+      width: 400px;
+      height: 600px;
+      
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 0;
+      top: -5%;
+    }
+
+    .carousel-group {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.3s ease-in-out;
+      pointer-events: none;
+    }
+
+    .carousel-group.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* Animações */
+    @keyframes slideInRight {
+      from {
+        opacity: 0;
+        transform: translateX(100%) rotate(-90deg);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0) rotate(0deg);
+      }
+    }
+
+    @keyframes slideInLeft {
+      from {
+        opacity: 0;
+        transform: translateX(-100%);
+      }
+      to {
+        opacity: 1;
+      }
+        transform: translateX(0);
+    }
+
+    .carousel-group.active .logo-coca,
+    .carousel-group.active .logo-fanta {
+      animation: slideInRight 0.8s ease forwards;
+    }
+
+    .carousel-group.active .lata-coca,
+    .carousel-group.active .lata-fanta {
+      animation: slideInLeft 0.8s ease forwards;
+    }
+
+    .logo-coca {
+      width: 65%;
+      height: auto;
+      object-fit: contain;
+      margin-bottom: -25px;
+
+      z-index: 0;
+    }
+
+    .lata-coca {
+      width: auto;
+      height: 50%;
+      object-fit: contain;
+      
+      z-index: 0;
+      
+    }
+
+    .splash-01 {
+      position: fixed;
+      left: 55%;
+      top: 82%;
+      transform: translateY(-50%);
+      width: 50vw;
+      height: auto;
+      opacity: 0.8;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    
+
+    .splash-02 {
+      position: fixed;
+      left: -15%;
+      top: 88%;
+      transform: translateY(-50%);
+      width: 70vw;
+      height: auto;
+  
+      z-index: 0;
+      pointer-events: none;
+    }
+
+
+    .logo-fanta {
+      width: 45%;
+      height: auto;
+      object-fit: contain;
+      margin-bottom: -80px;
+      z-index: 0;
+    }
+
+    .lata-fanta {
+      width: auto;
+      height: 50%;
+      object-fit: contain;
+      margin-top: 85px;
+      z-index: 0;
+    }
+
+    .side-button {
+      padding: 10px;
+      font-size: 20px;
+      cursor: pointer;
+      background-color: white;
+      border: none;
+      border-radius: 50%;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+      width: 50px;
+      height: 50px;
+      z-index: 2;
+      transition: transform 0.2s, background-color 0.3s;
+    }
+
+    .side-button:hover {
+      transform: scale(1.1);
+      background-color: #ffcf2b;
+    }
+
+
+  </style>
+</head>
+
+<body>
+
+  <nav class="menu-superior">
+
+    <a href="#home">Home</a>
+    <a href="#home">Produtos</a>
+    <a href="#home">Vendas</a>
+    <a href="#home">Estoques</a>
+  
+
+
+  </nav>
+
+  <main class="carousel-wrapper">
+    <button id="prev" class="side-button">←</button>
+
+    <div class="carousel-container">
+      <!-- Grupo 1: Coca-Cola -->
+      <div class="carousel-group active">
+        <img src="imagens/logo-coca.png" class="logo-coca" alt="logo-coca">
+        <img src="imagens/coca-lata.png" class="lata-coca" alt="coca-lata">
+        <img src="imagens/splash-01.png" class="splash-01" alt="coca-splash-01">
+      </div>
+
+      <!-- Grupo 2: Fanta -->
+      <div class="carousel-group">
+        <img src="imagens/logo-fanta.png" class="logo-fanta" alt="logo-fanta">
+        <img src="imagens/fanta-lata.png" class="lata-fanta" alt="fanta-lata">
+
+        <img src="imagens/splash-fanta.png" class="splash-02" alt="fanta-lata">
+      </div>
+    </div>
+
+    <button id="next" class="side-button">→</button>
+  </main>
+
+  <script>
+    const groups = document.querySelectorAll('.carousel-group');
+    let current = 0;
+
+    function resetAnimations(group) {
+      const logos = group.querySelectorAll('.logo-coca, .logo-fanta');
+      const latas = group.querySelectorAll('.lata-coca, .lata-fanta');
+
+      logos.forEach(logo => {
+        logo.style.animation = 'none';
+        logo.offsetHeight; // força reflow
+        logo.style.animation = '';
+      });
+
+      latas.forEach(lata => {
+        lata.style.animation = 'none';
+        lata.offsetHeight;
+        lata.style.animation = '';
+      });
+    }
+
+    function showGroup(index) {
+      groups.forEach((group, i) => {
+        group.classList.remove('active');
+      });
+
+      const newGroup = groups[index];
+      resetAnimations(newGroup);
+      newGroup.classList.add('active');
+    }
+
+    document.getElementById('next').addEventListener('click', () => {
+      current = (current + 1) % groups.length;
+      showGroup(current);
+    });
+
+    document.getElementById('prev').addEventListener('click', () => {
+      current = (current - 1 + groups.length) % groups.length;
+      showGroup(current);
+    });
+  </script>
+</body>
+</html>
